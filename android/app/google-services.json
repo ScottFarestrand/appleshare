@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "144802771227",
+    "project_id": "appleshare-61bc6",
+    "storage_bucket": "appleshare-61bc6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:144802771227:android:92e52ce39ae10bd8e763be",
+        "android_client_info": {
+          "package_name": "com.farestrand.appleshare"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "144802771227-5lsscmaocpp7erbpgun72d6k1eq74mdj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.farestrand.appleshare",
+            "certificate_hash": "9d19c5b39f33c843dd81722f1a31034872f75756"
+          }
+        },
+        {
+          "client_id": "144802771227-d9a4r025foe71nm9njis681ggtal71g0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA79tUy8vXutBA4xOtgScr7GIo1blP5dM4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "144802771227-d9a4r025foe71nm9njis681ggtal71g0.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "144802771227-93it6qdudcd8v6mfhncajbsrfvelte3l.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.farestrand.appleshare"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
