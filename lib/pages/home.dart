@@ -4,7 +4,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/user.dart';
 
-import '../pages/timeline.dart';
+// import '../pages/timeline.dart';
 import '../pages/profile.dart';
 import '../pages/activity_feed.dart';
 import '../pages/upload.dart';
