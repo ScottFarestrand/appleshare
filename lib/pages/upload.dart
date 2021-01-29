@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '../models/user.dart';
 
 // import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -7,6 +8,10 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 
 class Upload extends StatefulWidget {
+  final User currentUser;
+
+  Upload({this.currentUser});
+
   @override
   _UploadState createState() => _UploadState();
 }
@@ -94,8 +99,45 @@ class _UploadState extends State<Upload> {
     );
   }
 
+  clearImage() {
+    setState(() {
+      file = null;
+    });
+  }
+
+  Scaffold buildUploadForm() {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white70,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.black,
+          ),
+          onPressed: clearImage,
+        ),
+        title: Text(
+          'Caption Post',
+          style: TextStyle(color: Colors.black),
+        ),
+        actions: [
+          FlatButton(
+            onPressed: () => print("Post Pressed"),
+            child: Text(
+              "Post",
+              style: TextStyle(
+                  color: Colors.blueAccent,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20.0),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return file == null ? buildSplashScreen() : Text('File Loaded');
+    return file == null ? buildSplashScreen() : buildUploadForm();
   }
 }
