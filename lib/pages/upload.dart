@@ -1,7 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:image/image.dart' as Im;
+import 'package:uuid/uuid.dart';
+
+import '../pages/home.dart';
 import '../models/user.dart';
+import '../widgets/progress.dart';
 
 // import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -18,7 +25,11 @@ class Upload extends StatefulWidget {
 }
 
 class _UploadState extends State<Upload> {
+  TextEditingController locationController = TextEditingController();
+  TextEditingController captionController = TextEditingController();
   File file;
+  bool usUploading = false;
+  String postId = Uuid().v4();
 
   handleTakePhoto() async {
     print('taking photo');
@@ -106,6 +117,66 @@ class _UploadState extends State<Upload> {
     });
   }
 
+  compressImange() async {
+    Directory tempDir = await getTemporaryDirectory();
+    final path = tempDir.path;
+    Im.Image imageFile = Im.decodeImage(file.readAsBytesSync());
+    final compressedImageFile = File('$path/img_$postId.jpg')
+      ..writeAsBytesSync(Im.encodeJpg(imageFile, quality: 85));
+    setState(() {
+      file = compressedImageFile;
+    });
+  }
+
+  Future<String> uploadImage(imageFile) async {
+    StorageUploadTask uploadTask =
+        storeageRef.child("post_$postId.jpg").putFile(imageFile);
+    StorageTaskSnapshot storageSnap = await uploadTask.onComplete;
+    String downloadUrl = await storageSnap.ref.getDownloadURL();
+    return downloadUrl;
+  }
+
+  createPostInFireStore({
+    String mediaUrl,
+    String location,
+    String description,
+  }) {
+    postsRef
+        .document(widget.currentUser.id)
+        .collection('userPosts')
+        .document(postId)
+        .setData({
+      "postId": postId,
+      "ownerId": widget.currentUser.id,
+      "username": widget.currentUser.username,
+      "medialUrl": mediaUrl,
+      "description": description,
+      "locaton": location,
+      "timeStamp": timestamp,
+      "likes": {},
+    });
+  }
+
+  handleSubmit() async {
+    print("handling");
+    setState(() {
+      usUploading = true;
+    });
+    await compressImange();
+    String mediaUrl = await uploadImage(file);
+    createPostInFireStore(
+        mediaUrl: mediaUrl,
+        location: locationController.text,
+        description: captionController.text);
+    captionController.clear();
+    locationController.clear();
+    setState(() {
+      file = null;
+      usUploading = false;
+      postId = Uuid().v4();
+    });
+  }
+
   Scaffold buildUploadForm() {
     return Scaffold(
       appBar: AppBar(
@@ -123,7 +194,7 @@ class _UploadState extends State<Upload> {
         ),
         actions: [
           FlatButton(
-            onPressed: () => print("Post Pressed"),
+            onPressed: usUploading ? null : () => handleSubmit(),
             child: Text(
               "Post",
               style: TextStyle(
@@ -136,6 +207,7 @@ class _UploadState extends State<Upload> {
       ),
       body: ListView(
         children: <Widget>[
+          usUploading ? linearProgress() : Text(''),
           Container(
             height: 220.0,
             width: MediaQuery.of(context).size.width * .8,
@@ -162,6 +234,7 @@ class _UploadState extends State<Upload> {
             title: Container(
               width: 250.0,
               child: TextField(
+                controller: captionController,
                 decoration: InputDecoration(
                   hintText: "Write a caption",
                   border: InputBorder.none,
@@ -179,6 +252,7 @@ class _UploadState extends State<Upload> {
             title: Container(
               width: 250,
               child: TextField(
+                controller: locationController,
                 decoration: InputDecoration(
                     hintText: "Where was this photo taken",
                     border: InputBorder.none),
