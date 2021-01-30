@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:image/image.dart' as Im;
 import 'package:uuid/uuid.dart';
+import 'package:geolocator/geolocator.dart';
 
 import '../pages/home.dart';
 import '../models/user.dart';
@@ -264,7 +265,8 @@ class _UploadState extends State<Upload> {
             width: 200.0,
             alignment: Alignment.center,
             child: RaisedButton.icon(
-              onPressed: () => print('Get Locations'),
+              // onPressed: () => print('Get Locations'),
+              onPressed: getUserLocation,
               icon: Icon(Icons.my_location),
               label: Text(
                 'Use Current Location',
@@ -281,6 +283,33 @@ class _UploadState extends State<Upload> {
         ],
       ),
     );
+  }
+
+  getUserLocation() async {
+    String address = '';
+    Position position = await Geolocator()
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
+    List<Placemark> placeMarks = await Geolocator()
+        .placemarkFromCoordinates(position.latitude, position.longitude);
+    Placemark placemark = placeMarks[0];
+
+    if (placemark.name == null) {
+      address = placemark.locality +
+          ',' +
+          placemark.administrativeArea +
+          '. ' +
+          placemark.postalCode;
+    } else {
+      address = placemark.name +
+          ': ' +
+          placemark.locality +
+          ',' +
+          placemark.administrativeArea;
+    }
+    print(address);
+    setState(() {
+      locationController.text = address;
+    });
   }
 
   @override
