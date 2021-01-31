@@ -1,5 +1,9 @@
+import 'package:appleshare/pages/home.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import '../widgets/progress.dart';
+import '../models/user.dart';
 
 class Post extends StatefulWidget {
   final String postId;
@@ -76,8 +80,122 @@ class _PostState extends State<Post> {
       this.likes,
       this.likeCount});
 
+  buildPostHeader() {
+    return FutureBuilder(
+        future: usersRef.document(ownerId).get(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return circularProgress();
+          }
+          User user = User.fromDocument(snapshot.data);
+          return ListTile(
+            leading: CircleAvatar(
+              backgroundImage: CachedNetworkImageProvider(user.photoUrl),
+              backgroundColor: Colors.grey,
+            ),
+            title: GestureDetector(
+              child: Text(
+                user.username,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              onTap: () => print('Profile Tapped'),
+            ),
+            subtitle: Text(location),
+            trailing: IconButton(
+              onPressed: () => 'Deleting post',
+              icon: Icon(
+                Icons.more_vert,
+              ),
+            ),
+          );
+        });
+  }
+
+  buildPostImage() {
+    return GestureDetector(
+      onDoubleTap: () => print('double tapped'),
+      child: Stack(
+        alignment: Alignment.center,
+        children: <Widget>[Image.network(mediaUrl)],
+      ),
+    );
+  }
+
+  buildPostFooter() {
+    return Column(
+      children: <Widget>[
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Padding(padding: EdgeInsets.only(top: 40.0, left: 20.0)),
+            GestureDetector(
+              child: Icon(
+                Icons.favorite_border,
+                size: 28.0,
+                color: Colors.pink,
+              ),
+              onTap: () => print("liking"),
+            ),
+            Padding(
+              padding: EdgeInsets.only(
+                right: 20.0,
+              ),
+            ),
+            GestureDetector(
+              child: Icon(
+                Icons.chat,
+                size: 28.0,
+                color: Colors.blue[900],
+              ),
+              onTap: () => print("show Comments"),
+            ),
+          ],
+        ),
+        Row(
+          children: <Widget>[
+            Container(
+              margin: EdgeInsets.only(left: 20.0),
+              child: Text(
+                '$likeCount',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Container(
+              margin: EdgeInsets.only(left: 20.0),
+              child: Text(
+                '$username',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Text("Post");
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        buildPostHeader(),
+        buildPostImage(),
+        buildPostFooter(),
+      ],
+    );
   }
 }
