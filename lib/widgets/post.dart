@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../models/user.dart';
 import '../pages/timeline.dart';
 import '../widgets/progress.dart';
+import '../widgets/custom_image.dart';
 
 class Post extends StatefulWidget {
   final String postId;
@@ -124,7 +125,8 @@ class _PostState extends State<Post> {
       child: Stack(
         alignment: Alignment.center,
         children: <Widget>[
-          Image.network(mediaUrl),
+          cachedNetworkImage(mediaUrl),
+          // Image.network(mediaUrl),
         ],
       ),
     );
