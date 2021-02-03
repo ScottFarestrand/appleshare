@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 Widget cachedNetworkImage(mediaUrl) {
   return CachedNetworkImage(
+    height: 200,
     imageUrl: mediaUrl,
     fit: BoxFit.cover,
     placeholder: (context, url) => Padding(
