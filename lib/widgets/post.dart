@@ -137,6 +137,7 @@ class _PostState extends State<Post> {
           .collection('userPosts')
           .document(postId)
           .updateData({'likes.$currentUserId': false});
+      removeLikeFromActivityFeed();
       setState(() {
         likeCount -= 1;
         isLiked = false;
@@ -148,6 +149,7 @@ class _PostState extends State<Post> {
           .collection('userPosts')
           .document(postId)
           .updateData({'likes.$currentUserId': true});
+      addLikeToActivityFeed();
       setState(() {
         likeCount += 1;
         isLiked = true;
@@ -160,6 +162,54 @@ class _PostState extends State<Post> {
         });
       });
     }
+  }
+
+  addLikeToActivityFeed() {
+    if (ownerId == currentUserId) {
+      return;
+    }
+    activityFeedRef
+        .document(ownerId)
+        .collection("feeditems")
+        .document(postId)
+        .setData({
+      "type": "Like",
+      "username": currentUser.username,
+      "userId": currentUser.id,
+      "userProfileImage": currentUser.photoUrl,
+      "postId": postId,
+      "mediaUrl": mediaUrl,
+      "timestamp": DateTime.now(),
+    });
+  }
+
+  removeLikeFromActivityFeed() {
+    if (currentUserId == ownerId) {
+      return;
+    }
+    activityFeedRef
+        .document(ownerId)
+        .collection("feeditems")
+        .document(postId)
+        .get()
+        .then((doc) {
+      if (doc.exists) {
+        doc.reference.delete();
+      }
+    });
+    activityFeedRef
+        .document(ownerId)
+        .collection("feeditems")
+        .document(postId)
+        .setData({
+      "type": "Like",
+      "username": currentUser.username,
+      "userId": currentUser.id,
+      "userProfileImage": currentUser.photoUrl,
+      "postId": postId,
+      "mediaUrl": mediaUrl,
+      "timestamp": DateTime.now(),
+    });
   }
 
   buildPostImage() {
