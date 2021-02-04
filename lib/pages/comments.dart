@@ -67,6 +67,7 @@ class CommentsState extends State<Comments> {
       "userId": currentUser.id,
     });
     commentController.clear();
+    FocusScope.of(context).requestFocus(new FocusNode());
   }
 
   @override
