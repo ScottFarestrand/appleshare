@@ -13,6 +13,8 @@ import '../pages/search.dart';
 import '../pages/create_account.dart';
 
 final GoogleSignIn googleSignIn = GoogleSignIn();
+final followersRef = Firestore.instance.collection('followers');
+final followingRef = Firestore.instance.collection('following');
 final usersRef = Firestore.instance.collection('users');
 final postsRef = Firestore.instance.collection('posts');
 final commentsRef = Firestore.instance.collection('comments');
