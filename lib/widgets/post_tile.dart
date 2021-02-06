@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../pages/post_screen.dart';
 import '../widgets/custom_image.dart';
 import '../widgets/post.dart';
 
@@ -7,10 +8,20 @@ class PostTile extends StatelessWidget {
 
   PostTile(this.post);
 
+  showPost(context) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (commentData) => PostScreen(
+                  postId: post.postId,
+                  userId: post.ownerId,
+                )));
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => print('Showing Post'),
+      onTap: () => showPost(context),
       child: cachedNetworkImage(post.mediaUrl),
     );
   }

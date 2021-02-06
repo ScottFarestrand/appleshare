@@ -7,6 +7,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../models/user.dart';
 import '../pages/home.dart';
+import '../pages/profile.dart';
 import '../widgets/progress.dart';
 import '../widgets/custom_image.dart';
 import '../pages/comments.dart';
@@ -109,7 +110,7 @@ class _PostState extends State<Post> {
             backgroundColor: Colors.grey,
           ),
           title: GestureDetector(
-            onTap: () => print('showing profile'),
+            onTap: () => showProfile(context, profileId: user.id),
             child: Text(
               user.username,
               style: TextStyle(
@@ -320,4 +321,15 @@ showComments(BuildContext context,
       postMediaUrl: mediaUrl,
     );
   }));
+}
+
+showProfile(BuildContext context, {String profileId}) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => Profile(
+        profileId: profileId,
+      ),
+    ),
+  );
 }
