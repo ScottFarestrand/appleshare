@@ -1,0 +1,30 @@
+{
+  "name": "appleshare",
+  "version": "1.0.0",
+  "description": "appleshare",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "dependencies": {
+    "eslint": "^7.19.0"
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.1.0"
+  },
+  "scripts": {
+    "lint": "./node_modules/.bin/tslint -p tslint.json",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ScottFarestrand/appleshare.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ScottFarestrand/appleshare/issues"
+  },
+  "homepage": "https://github.com/ScottFarestrand/appleshare#readme"
+}

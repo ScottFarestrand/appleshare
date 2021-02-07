@@ -8,6 +8,14 @@ module.exports = {
     "eslint:recommended",
     "google",
   ],
+  parserOptions: {
+    "sourceType": "module",
+    "ecmaVersion": 2020,
+    "ecmaFeatures": {
+      "jsx": true,
+      "experimentalObjectRestSpread": true,
+    },
+  },
   rules: {
     quotes: ["error", "double"],
   },
