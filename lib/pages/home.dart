@@ -20,7 +20,7 @@ final postsRef = Firestore.instance.collection('posts');
 final commentsRef = Firestore.instance.collection('comments');
 final activityFeedRef = Firestore.instance.collection('feed');
 final DateTime timestamp = DateTime.now();
-final StorageReference storeageRef = FirebaseStorage.instance.ref();
+final StorageReference storageRef = FirebaseStorage.instance.ref();
 User currentUser;
 
 class Home extends StatefulWidget {

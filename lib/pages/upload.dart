@@ -131,7 +131,7 @@ class _UploadState extends State<Upload> {
 
   Future<String> uploadImage(imageFile) async {
     StorageUploadTask uploadTask =
-        storeageRef.child("post_$postId.jpg").putFile(imageFile);
+        storageRef.child("post_$postId.jpg").putFile(imageFile);
     StorageTaskSnapshot storageSnap = await uploadTask.onComplete;
     String downloadUrl = await storageSnap.ref.getDownloadURL();
     return downloadUrl;
