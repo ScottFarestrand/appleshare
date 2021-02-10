@@ -5,7 +5,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/user.dart';
 
-// import '../pages/timeline.dart';
+import '../pages/timeline.dart';
 import '../pages/profile.dart';
 import '../pages/activity_feed.dart';
 import '../pages/upload.dart';
@@ -19,7 +19,8 @@ final usersRef = Firestore.instance.collection('users');
 final postsRef = Firestore.instance.collection('posts');
 final commentsRef = Firestore.instance.collection('comments');
 final activityFeedRef = Firestore.instance.collection('feed');
-final DateTime timestamp = DateTime.now();
+final timelineRef = Firestore.instance.collection('timeline');
+// final DateTime timestamp = DateTime.now();
 final StorageReference storageRef = FirebaseStorage.instance.ref();
 User currentUser;
 
@@ -51,9 +52,9 @@ class _HomeState extends State<Home> {
     });
   }
 
-  handleSignIn(GoogleSignInAccount account) {
+  handleSignIn(GoogleSignInAccount account) async {
     if (account != null) {
-      createUserInFirestore();
+      await createUserInFirestore();
       setState(() {
         isAuth = true;
       });
@@ -82,7 +83,7 @@ class _HomeState extends State<Home> {
         "email": user.email,
         "displayName": user.displayName,
         "bio": "",
-        "timestamp": timestamp
+        "timestamp": DateTime.now(),
       });
       doc = await usersRef.document(user.id).get();
     }
@@ -123,11 +124,11 @@ class _HomeState extends State<Home> {
     return Scaffold(
       body: PageView(
         children: <Widget>[
-          // Timeline(),
-          RaisedButton(
-            child: Text('Logout'),
-            onPressed: logout,
-          ),
+          Timeline(currentUser: currentUser),
+          // RaisedButton(
+          //   child: Text('Logout'),
+          //   onPressed: logout,
+          // ),
           ActivityFeed(),
           Upload(currentUser: currentUser),
           Search(),

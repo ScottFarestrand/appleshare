@@ -62,7 +62,7 @@ class CommentsState extends State<Comments> {
     commentsRef.document(postId).collection("comments").add({
       "username": currentUser.username,
       "comment": commentController.text,
-      "timestamp": timestamp,
+      "timestamp": DateTime.now(),
       "avatarUrl": currentUser.photoUrl,
       "userId": currentUser.id,
     });
