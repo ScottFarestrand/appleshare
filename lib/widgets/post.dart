@@ -231,7 +231,7 @@ class _PostState extends State<Post> {
     }
     activityFeedRef
         .document(ownerId)
-        .collection("feeditems")
+        .collection("feedItems")
         .document(postId)
         .setData({
       "type": "Like",
@@ -250,7 +250,7 @@ class _PostState extends State<Post> {
     }
     activityFeedRef
         .document(ownerId)
-        .collection("feeditems")
+        .collection("feedItems")
         .document(postId)
         .get()
         .then((doc) {
@@ -260,7 +260,7 @@ class _PostState extends State<Post> {
     });
     activityFeedRef
         .document(ownerId)
-        .collection("feeditems")
+        .collection("feedItems")
         .document(postId)
         .setData({
       "type": "Like",
