@@ -99,6 +99,7 @@ class ActivityFeedItem extends StatelessWidget {
   }
 
   configureMediaPreview(context) {
+    print("Media URL $mediaUrl");
     if (type == "like" || type == 'comment') {
       mediaPreview = GestureDetector(
         onTap: () => showPost(
@@ -137,7 +138,7 @@ class ActivityFeedItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     configureMediaPreview(context);
-
+    print("User Image: $userProfileImg");
     return Padding(
       padding: EdgeInsets.only(bottom: 2.0),
       child: Container(

@@ -19,8 +19,7 @@ final usersRef = Firestore.instance.collection('users');
 final postsRef = Firestore.instance.collection('posts');
 final commentsRef = Firestore.instance.collection('comments');
 final activityFeedRef = Firestore.instance.collection('feed');
-final timelineRef = Firestore.instance.collection('timeline');
-// final DateTime timestamp = DateTime.now();
+final DateTime timestamp = DateTime.now();
 final StorageReference storageRef = FirebaseStorage.instance.ref();
 User currentUser;
 
@@ -54,8 +53,12 @@ class _HomeState extends State<Home> {
 
   handleSignIn(GoogleSignInAccount account) async {
     if (account != null) {
+      print("Getting");
       await createUserInFirestore();
+      print("Got");
+      print(currentUser.id);
       setState(() {
+        print("setting State");
         isAuth = true;
       });
     } else {
@@ -68,6 +71,7 @@ class _HomeState extends State<Home> {
   createUserInFirestore() async {
     // 1) check if user exists in users collection in database (according to their id)
     final GoogleSignInAccount user = googleSignIn.currentUser;
+    print("User ID: $user.id");
     DocumentSnapshot doc = await usersRef.document(user.id).get();
 
     if (!doc.exists) {
@@ -83,12 +87,13 @@ class _HomeState extends State<Home> {
         "email": user.email,
         "displayName": user.displayName,
         "bio": "",
-        "timestamp": DateTime.now(),
+        "timestamp": timestamp
       });
       doc = await usersRef.document(user.id).get();
     }
 
     currentUser = User.fromDocument(doc);
+    print(currentUser.id);
     print(currentUser.displayName);
   }
 
