@@ -176,3 +176,51 @@ exports.onDeletePost = functions.firestore
             });
       });
     });
+
+exports.onCreateActivityFeedItem = functions.firestore
+    .document("/feed/{userId}/feedItems/{activityFeedItem}")
+    .onCreate(async (snapshot, context) => {
+      console.log("Activity Feed Item Created", snapshot.data());
+      const userId = context.params.userId;
+      const userRef = admin.firestore().doc(`users/${userId}`);
+      const doc = await userRef.get();
+      const androidNotificationToken = doc.data().androidNotificationToken;
+      const createdActivityFeedItem = snapshot.data();
+      if (androidNotificationToken) {
+        sendNotification(androidNotificationToken, createdActivityFeedItem);
+      } else {
+        console.log("No Toke for user");
+      }
+      /**
+       * Adds two numbers together.
+       * @param {String} androidNotificationToken The first number.
+       * @param {String} activityFeedItem The second number.
+       */
+      function sendNotification(androidNotificationToken, activityFeedItem) {
+        let body;
+        switch (activityFeedItem.type) {
+          case "comment":
+            body = "{$activityFeedItem.userName} replied:";
+            break;
+          case "Like":
+            body = "{$activityFeedItem.userName} liked your post";
+            break;
+          case "follow":
+            body = "{$activityFeedItem.userName} is following you";
+            break;
+          default:
+            body = "something went wrong";
+            break;
+        }
+        const message = {
+          notification: {body},
+          token: androidNotificationToken,
+          data: {recipient: userId},
+        };
+        admin.messaging().send(message).then((response) => {
+          console.log("Success", response);
+        }).catch((error) => {
+          console.log("Error", error);
+        });
+      }
+    });
